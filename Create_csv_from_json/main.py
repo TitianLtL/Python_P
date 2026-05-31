@@ -9,29 +9,24 @@ cs  = '{"TOTAL_ROWS":       ?}'
 
 number = 65000
 
-def timer_dec (base_fn):
-    def enhanced_fn(* args , **kwargs): 
-        start_time=time.time() 
-        base_fn(*args,**kwargs)
-        end_time=time.time()
-        print (f"Task time : {end_time-start_time}  seconds")
-    return enhanced_fn
+def gen_lines(from_size, to_size):
+    line = ''
+    for x in range(from_size, to_size):
+        parts = [com.replace('?', 'U'), dp1, str(x), dp3, '\n']
+        line = line + ''.join(parts)
+    yield line
 
-
-@timer_dec
-def createDataFile(name, size, line=''):
+def createDataFile2(name, size):
     deleteData(name)
     createFile(name, header)
   
-    for x in range(size):
-        parts = [com.replace('?', 'U'), dp1, str(x), dp3, '\n']
-        line = line + ''.join(parts)
-        if x % 10000 == 0:
-            createFile(name,line)
-            line=''
-    createFile(name, line)
-   
+    for x in range(0, 2):
+        line = ''
+        gen_lines_obj = gen_lines(x, x+1000)
+        line = next(gen_lines_obj)
+        createFile(name, line)
 
+    
 def deleteData(name):
      open(name, 'w').close()
 
@@ -39,12 +34,8 @@ def createFile(name, data):
     with open(name, 'a') as f:
         f.write(data)
 
-def createCSFile(name,size):
-    deleteData(name)
-    createFile(name, header)
-    line = com.replace('?','S') + cs.replace('?',f'{size}')
-    createFile(name, line)
+
 
 if __name__ == "__main__":
-    createDataFile("./Create_csv_from_json/post_data.csv",number)
-    createCSFile ("./Create_csv_from_json/post_cs.csv",number)
+    createDataFile2("./Create_csv_from_json/data_v2.csv",number)
+
