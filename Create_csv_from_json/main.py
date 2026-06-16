@@ -1,4 +1,5 @@
 
+from os import name
 import time
 
 header='PREV_EXTRACT_TS;CURR_EXTRACT_TS;CRUD_ACTION;DOMAIN;PAYLOAD\n'
@@ -30,7 +31,17 @@ def createDataFile(name, size, line=''):
             createFile(name,line)
             line=''
     createFile(name, line)
+
+def createDataFileComprehension(name, size, line=''):
+    deleteData(name)
+    createFile(name, header)
+    line = [ ' '.join([com.replace('?', 'U'), dp1, str(x), dp3, '\n']) for x in range(size) ]
+  
+    createFile(name, line)    
    
+def saveSomeLines(line, name): 
+    createFile(name,line)
+    return ''
 
 def deleteData(name):
      open(name, 'w').close()
@@ -46,5 +57,5 @@ def createCSFile(name,size):
     createFile(name, line)
 
 if __name__ == "__main__":
-    createDataFile("./Create_csv_from_json/post_data.csv",number)
-    createCSFile ("./Create_csv_from_json/post_cs.csv",number)
+    createDataFileComprehension("./Create_csv_from_json/post_data.csv",number)
+    # createCSFile ("./Create_csv_from_json/post_cs.csv",number)
